@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  php-apache-environment:
+    container_name: php-apache
+    build:
+      context: ./phpDir
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    volumes:
+      - ./phpDir/src:/var/www/html/
+    ports:
+      - 8005:80
+  db:
+    container_name: db
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: lionPass
+      MYSQL_DATABASE: lionDB
+      MYSQL_USER: lionUser
+      MYSQL_PASSWORD: lionPass
+    ports:
+      - '9906:3306'
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '9080:80'
+    restart: always
+    environment:
+      PMA_HOST: db
+    depends_on:
+      - db
